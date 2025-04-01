@@ -1,22 +1,75 @@
-* NavHostController : backstack, navigate 등을 제어
-* rememberNavController() : recomposition 중 navController 상태 유지
-* NavGraphBuilder : navigation graph를 구성하는 DSL builder
+# Jetpack Compose Navigation + Route + DeepLink 정리
 
+Jetpack Compose 기반 **DeepLink**, **BackStack 제어**, **Route 관리**를 연습해보는 프로젝트입니다.
 
-* NavHost
-- route 들을 실행 해주는 container
-- composable로 화면 등록 
-- navController.navigate("repositories/warrenth") 로 호출하면
-  NavHost 에 등록된 composable(route = "...") 와 매칭
-- 모든 composable이 route 에 등록 되어 있다면, 중앙 집중적 관리 가능
-- Route sealed class 로 자동완성, 타입안전성, 실수 방지
+---
 
-navController.navigate("Route.Main.create("")") {
-    popupTo("splash") { inclusive = true }
+## Navigation 구성요소 (기본)
+
+### NavHost 구성
+```kotlin
+NavHost(
+    navController = navController,
+    startDestination = Route.Splash.route
+) {
+    splashRoute(navController)
+    repositoriesRoute()
 }
-popUpTo(...): backstack을 어디까지 제거할지 결정
-inclusive = true: 자신도 제거 → 뒤로가기 시 돌아가지 않음
-inclusive = false: 자신은 유지 → 뒤로가기로 다시 볼 수 있음
+```
+- NavHost는 route를 관리하는 container
+- 모든 화면은 composable()로 등록되어야 navigate가 가능
 
+### NavGraphBuilder
+```kotlin
+fun NavGraphBuilder.repositoriesRoute() {
+    composable(
+        route = Route.Repositories.route,
+        arguments = listOf(navArgument("user") { type = NavType.StringType }
+        ),
+        deepLinks = listOf(
+            navDeepLink { uriPattern = Route.Repositories.URI_PARAM_USER }
+        )
+    ) { backStackEntry ->
+        val user = backStackEntry.arguments?.getString("user").orEmpty()
+        RepositoriesScreen(user)
+    }
+}
+```
+- Route 등록 및 DeepLink 설정
+- arguments : user는 경로에 포함된 path parameter로, String 타입임을 명시, NavBackStackEntry로부터 안전하게 꺼내쓸 수 있음
 
+### NavHostController
+- `navigate(route)`로 화면 이동 및 `BackStack` 제어
+- `popUpTo(...)` 등을 통해 백스택 흐름 제어 가능
 
+### rememberNavController()
+```kotlin
+val navController = rememberNavController()
+```
+- Compose에서 recomposition 시 상태가 유지되도록 하기 위해 remember 사용
+- 내부적으로 ViewModelStoreOwner, LifecycleOwner, SavedStateHandle과 연결
+- Lifecycle-aware 하게 NavController를 안전하게 관리할 수 있음
+
+## popUpTo로 BackStack 제어
+```kotlin
+navController.navigate(Route.Repositories.create("warrenth")) {
+    popUpTo(Route.Splash.route) {
+        inclusive = true
+    }
+}
+```
+- popUpTo(...)	backstack을 어디까지 제거할지 지정
+- inclusive = true	해당 route까지 제거
+- inclusive = false	해당 route는 유지
+
+## Route 정의
+```kotlin
+sealed class Route(val route: String) {
+    data object Splash : Route("splash")
+
+    data object Repositories : Route("repositories/{user}") {
+        fun create(user: String) = "repositories/$user"
+        const val URI_PARAM_USER = "repositories://{user}"
+    }
+}
+```
