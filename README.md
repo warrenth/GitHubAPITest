@@ -1,8 +1,5 @@
 # Jetpack Compose Navigation + Route + DeepLink 정리
-
 Jetpack Compose 기반 **DeepLink**, **BackStack 제어**, **Route 관리**를 연습해보는 프로젝트입니다.
-
----
 
 ## Navigation 구성요소 (기본)
 
