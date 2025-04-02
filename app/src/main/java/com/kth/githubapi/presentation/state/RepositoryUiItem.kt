@@ -11,7 +11,10 @@ data class RepositoryUiItem(
     val starCount: Int
 )
 
-fun Repository.toUiItem(): RepositoryUiItem {
+fun Repository.toUiItem(): RepositoryUiItem? {
+
+    if (id <= 0 || name.isBlank()) return null
+
     return RepositoryUiItem(
         id = id,
         name = name,

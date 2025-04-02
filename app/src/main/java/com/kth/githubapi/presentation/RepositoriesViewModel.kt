@@ -30,7 +30,14 @@ class RepositoriesViewModel @Inject constructor(
     fun load(user: String) {
         viewModelScope.launch {
             getRepositories(user)
-                .map { repos -> RepositoriesUiState.Loaded(repos.map { it.toUiItem() }) }
+                .map { repos ->
+                    val uiItem = repos.mapNotNull { it.toUiItem() }
+                    if (uiItem.isEmpty()) {
+                        RepositoriesUiState.Empty
+                    } else {
+                        RepositoriesUiState.Loaded(uiItem)
+                    }
+                }
                 .catch { _errorFlow.emit(it) }
                 .collect { uiState -> _uiState.value = uiState }
         }

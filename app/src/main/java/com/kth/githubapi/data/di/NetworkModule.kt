@@ -17,7 +17,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideJson(): Json = Json { ignoreUnknownKeys = true }
+    fun provideJson(): Json = Json {
+        ignoreUnknownKeys = true // 미정의 무시
+        coerceInputValues = true // 기본값 대체
+    }
 
     @Provides
     @Singleton

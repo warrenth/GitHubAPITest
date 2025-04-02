@@ -44,6 +44,8 @@ import com.kth.githubapi.presentation.navigation.Route
 import com.kth.githubapi.presentation.screen.preview.RepositoryListPreviewProvider
 import com.kth.githubapi.presentation.state.RepositoriesUiState
 import com.kth.githubapi.presentation.state.RepositoryUiItem
+import com.kth.githubapi.ui.component.EmptyView
+import com.kth.githubapi.ui.component.LoadingView
 
 fun NavGraphBuilder.repositoriesRoute() {
     composable(
@@ -76,7 +78,8 @@ fun RepositoriesScreen(
     }
 
     when (val state = uiState) {
-        is RepositoriesUiState.Loading -> LoadingScreen()
+        is RepositoriesUiState.Loading -> LoadingView()
+        is RepositoriesUiState.Empty -> EmptyView()
         is RepositoriesUiState.Loaded -> {
             RepositoriesList(
                 items = state.items,

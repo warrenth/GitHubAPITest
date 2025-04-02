@@ -6,14 +6,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class RepositoryResponse(
-    val id: Int,
-    val name: String,
-    @SerialName("html_url")
-    val htmlUrl: String,
-    val description: String? = null,
-    val language: String? = null,
-    @SerialName("stargazers_count")
-    val starCount: Int
+    @SerialName("id") val id: Int = 0,
+    @SerialName("name") val name: String = "",
+    @SerialName("html_url") val htmlUrl: String = "",
+    @SerialName("description") val description: String? = null,
+    @SerialName("language") val language: String? = null,
+    @SerialName("stargazers_count") val starCount: Int = 0
 )
 
 fun RepositoryResponse.toDomain(): Repository {
