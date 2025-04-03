@@ -1,7 +1,9 @@
 package com.kth.githubapi.presentation.state
 
+import androidx.compose.runtime.Immutable
 import com.kth.githubapi.domain.model.Repository
 
+@Immutable
 data class RepositoryUiItem(
     val id: Int,
     val name: String,
