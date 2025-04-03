@@ -3,6 +3,7 @@ package com.kth.githubapi.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kth.githubapi.domain.usecase.GetRepositoriesUseCase
+import com.kth.githubapi.presentation.state.RepositoriesUiEffect
 import com.kth.githubapi.presentation.state.RepositoriesUiState
 import com.kth.githubapi.presentation.state.toUiItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,8 +25,8 @@ class RepositoriesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<RepositoriesUiState>(RepositoriesUiState.Loading)
     val uiState: StateFlow<RepositoriesUiState> = _uiState.asStateFlow()
 
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow = _errorFlow.asSharedFlow()
+    private val _effect = MutableSharedFlow<RepositoriesUiEffect>()
+    val effect = _effect.asSharedFlow()
 
     fun load(user: String) {
         viewModelScope.launch {
@@ -38,7 +39,9 @@ class RepositoriesViewModel @Inject constructor(
                         RepositoriesUiState.Loaded(uiItem)
                     }
                 }
-                .catch { _errorFlow.emit(it) }
+                .catch {
+                    _effect.emit(RepositoriesUiEffect.ShowErrorDialog(it.message ?: "Unknown Error"))
+                }
                 .collect { uiState -> _uiState.value = uiState }
         }
     }

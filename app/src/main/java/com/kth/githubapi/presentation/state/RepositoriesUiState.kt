@@ -5,3 +5,7 @@ sealed interface RepositoriesUiState {
     data object Empty : RepositoriesUiState
     data class Loaded(val items: List<RepositoryUiItem>) : RepositoriesUiState
 }
+
+sealed interface RepositoriesUiEffect {
+    data class ShowErrorDialog(val message: String) : RepositoriesUiEffect
+}
