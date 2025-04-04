@@ -7,7 +7,9 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Stable
 sealed interface RepositoriesUiState {
+    @Immutable
     data object Loading : RepositoriesUiState
+    @Immutable
     data object Empty : RepositoriesUiState
     @Immutable
     data class Loaded(val items: ImmutableList<RepositoryUiItem>) : RepositoriesUiState
