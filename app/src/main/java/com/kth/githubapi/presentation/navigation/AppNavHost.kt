@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.kth.githubapi.presentation.screen.issuesRoute
 import com.kth.githubapi.presentation.screen.repositoriesRoute
 import com.kth.githubapi.presentation.screen.splashRoute
 
@@ -23,6 +24,6 @@ fun AppNavHost(
     ) {
         splashRoute(navController)
         repositoriesRoute()
-        //issuesRoute()
+        issuesRoute()
     }
 }

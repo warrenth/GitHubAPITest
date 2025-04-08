@@ -1,6 +1,10 @@
 # Jetpack Compose Navigation + Route + DeepLink 정리
 Jetpack Compose 기반 **DeepLink**, **BackStack 제어**, **Route 관리**를 연습해보는 프로젝트입니다.
 
+## Deeplink 로 들어 올 수 있는 경로 정리
+앱 내부, 외부 앱, 웹브라우저, 푸시, Shortcut, 시스템
+
+
 ## Navigation 구성요소 (기본)
 
 ### NavHost 구성
@@ -70,3 +74,4 @@ sealed class Route(val route: String) {
     }
 }
 ```
+

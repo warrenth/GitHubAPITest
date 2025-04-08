@@ -7,6 +7,7 @@ import com.kth.githubapi.presentation.state.RepositoriesUiEffect
 import com.kth.githubapi.presentation.state.RepositoriesUiState
 import com.kth.githubapi.presentation.state.toUiItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,7 +37,7 @@ class RepositoriesViewModel @Inject constructor(
                     if (uiItem.isEmpty()) {
                         RepositoriesUiState.Empty
                     } else {
-                        RepositoriesUiState.Loaded(uiItem)
+                        RepositoriesUiState.Loaded(uiItem.toPersistentList())
                     }
                 }
                 .catch {
